@@ -13,12 +13,15 @@ namespace Asteroids
     /// Initial version 1.0
     /// Additional functionality to be added.  Enemy spaceship, shields etc.
     /// Shoot up the Corona virus.
-    /// </summary>
+    /// July 2020 - Phase 2 - Add enemy space ship.
+    /// </summary> 
     class GameControl
     {
         public Form1 form1;
         public Form2 form2;
         public Ship ship;
+        public EnemyShip enemyShip1;             // Phase 2
+        public bool EnemyShipActive = false;    // Phase 2
 
         public int NoOfShips = 3;
         public int FormSizeX { get; set; }
@@ -38,16 +41,15 @@ namespace Asteroids
         public int PlayerScore { get; set; }
 
         // Sounds
-        public System.Media.SoundPlayer soundPlayerLaser = new System.Media.SoundPlayer(@"C:\IansThings\DotNetProjects\Asteroids\Sounds\Laser-SoundBible.com-602495617.wav");
-        public System.Media.SoundPlayer soundPlayerLaserFast = new System.Media.SoundPlayer(@"C:\IansThings\DotNetProjects\Asteroids\Sounds\Alien_Machine_Gun-Matt_Cutillo-2023875589.wav");
         public System.Media.SoundPlayer soundPlayerLaseR = new System.Media.SoundPlayer(Properties.Resources.Laser_SoundBible_com_602495617);
-
         public System.Media.SoundPlayer soundPlayerMachineGun = new System.Media.SoundPlayer(Properties.Resources.Alien_Machine_Gun_Matt_Cutillo_2023875589);
         public System.Media.SoundPlayer soundPlayerGlass = new System.Media.SoundPlayer(Properties.Resources.Glass_Break);
         public System.Media.SoundPlayer soundPlayerDyingRobot = new System.Media.SoundPlayer(Properties.Resources.Dying_Robot);
         public System.Media.SoundPlayer soundPlayerThrust = new System.Media.SoundPlayer(Properties.Resources.Rocket_Thrusters);
 
         public Random random = new Random();
+
+        private int iteration;
 
         // For graphics in form1
         public int ShowExplosion = 0;   // Number of time to show the explosion.
@@ -86,9 +88,7 @@ namespace Asteroids
 
             // Reset any bullets.
             bullets = new List<Bullets>();
-            // if (bullets. > 0)
-            //    bullets.Clear();
-
+ 
             // Create some asteroids / corona virus objects.
             asteroids = new List<Asteroid>();
 
@@ -121,6 +121,8 @@ namespace Asteroids
 
         public void Iteration()
         {
+            iteration++;
+
             /// Fired by the form timer.  This will Move and process all of the space objects.
             ship.Move();
 
@@ -192,6 +194,34 @@ namespace Asteroids
                     }
                 }
 
+                // Phase 2 Check if we have hit the enemy ship
+                if (enemyShip1 != null && enemyShip1.Area.Contains(bullet.point) && bullet.Enemy != true)
+                {
+                    // Add to score.
+                    PlayerScore += 50;
+                    form2.playerScore.Text = PlayerScore.ToString();
+
+                    // Remove the object.
+                    enemyShip1 = null;
+
+                    soundPlayerGlass.Play();
+
+                    EnemyShipActive = false;
+
+                }
+
+                // Phase 2 - See if the enemy ship has hit us.
+                if (bullet.Enemy == true && ship.Area.Contains(bullet.point))
+                {
+                    // Oh dear we have been hit.  Call the NewShip routine.
+                    NewShip();
+                    ShowExplosion = 20;    // Number of times to show explosion
+                    ExplosionPoint = bullet.point;
+
+                    break;
+                }
+
+
                 // See is all asteroids have gone.  Need to start the next level.
                 if (asteroids.Count <= 0)
                 {
@@ -221,7 +251,33 @@ namespace Asteroids
                 }
             }
 
-            // Fire the form paint event.
+
+            // Phase 2 - Randomly start the enemy ship at the right hand side.
+            if (EnemyShipActive == false)
+            {
+                int randy = random.Next(0, 500);
+                if (randy == 250)
+                {
+                    EnemyShipActive = true;
+                    int startPosX = FormSizeX - 2;
+                    int startPosY = random.Next(1, FormSizeY);
+                    enemyShip1 = new EnemyShip(startPosX, startPosY, this);
+                    enemyShip1.Angle = 270.0F;
+
+                }
+            }
+
+            if (EnemyShipActive == true)
+            {
+                enemyShip1.Move();
+
+                if (iteration % 10 == 0)  // Fire every ten iterations.
+                    enemyShip1.Shoot();
+            }
+            
+
+
+            // Fire the form paint event to paint the graphics.
             form1.Invalidate();
         }
 
@@ -250,8 +306,35 @@ namespace Asteroids
             BullettsFired = bullets.Count();
 
             // Noise here
-            //  System.Media.SoundPlayer soundPlayer = new System.Media.SoundPlayer(@"C:\IansThings\DotNetProjects\Asteroids\Sounds\Laser-SoundBible.com-602495617.wav");
-            //soundPlayerLaser.Play();
+            soundPlayerLaseR.Play();
+
+        }
+
+        public void AddEnemyBullet()
+        {
+            Point bulletPoint;
+            bulletPoint = enemyShip1.point;
+            bulletPoint.X += 5;
+            bulletPoint.Y += 5;
+
+            bulletPoint = ship.CalcNewXY(bulletPoint, 2);   // If you are moving fast the bullets are painted behind the ship.
+
+
+            Bullets bullet = new Bullets(bulletPoint.X, bulletPoint.Y, this);
+
+            if (ship.point.Y < enemyShip1.point.Y)
+                bullet.Angle = 315;
+            else if (ship.point.Y > enemyShip1.point.Y)
+                bullet.Angle = 225;
+            else 
+                bullet.Angle = enemyShip1.Angle;
+
+            bullet.Enemy = true;
+            bullet.life = 120;
+
+            bullets.Add(bullet);
+
+            // Noise here
             soundPlayerLaseR.Play();
 
         }

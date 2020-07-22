@@ -81,19 +81,29 @@ namespace Asteroids
         {
 
             // Paint the ship on the screen.
-            //e.Graphics.DrawImageUnscaled(ship1, shipLocX, shipLocY);
             if (gameControl.ship.ship1 != null)
                 e.Graphics.DrawImageUnscaled(gameControl.ship.ship1, gameControl.ship.point.X, gameControl.ship.point.Y);
 
-         
+
             foreach (Bullets bullet in gameControl.bullets)
             {
-               e.Graphics.DrawImageUnscaled(Properties.Resources.BulletImage, bullet.point.X, bullet.point.Y);
+                if (bullet.Enemy == true)
+                    e.Graphics.DrawImageUnscaled(Properties.Resources.BulletImageRed, bullet.point.X, bullet.point.Y);
+                else
+                    e.Graphics.DrawImageUnscaled(Properties.Resources.BulletImage, bullet.point.X, bullet.point.Y);
             }
 
             foreach(Asteroid asteroid in gameControl.asteroids)
             {
                 e.Graphics.DrawImageUnscaled(asteroid.ImageBitmap, asteroid.point.X, asteroid.point.Y);
+            }
+
+            // Phase 2 - Show the enemy ship.
+            if (gameControl.enemyShip1 != null)
+            {
+                e.Graphics.DrawImageUnscaled(gameControl.enemyShip1.ImageBitmap,
+                                             gameControl.enemyShip1.point.X,
+                                             gameControl.enemyShip1.point.Y);
             }
 
             // Ship hit graphics.

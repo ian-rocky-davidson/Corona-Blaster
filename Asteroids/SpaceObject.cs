@@ -137,7 +137,7 @@ namespace Asteroids
             return bitmap;
         }
 
-        virtual protected void SetImage()
+        virtual protected void SetImage()  // protected is accessible to this base and any derived class.
         {
 
         }

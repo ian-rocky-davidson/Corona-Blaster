@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Asteroid.cs" />
     <Compile Include="Bullets.cs" />
+    <Compile Include="EnemyShip.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -245,6 +246,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EnemyShip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\BulletImageRed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

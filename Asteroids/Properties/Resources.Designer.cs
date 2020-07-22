@@ -91,6 +91,16 @@ namespace Asteroids.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BulletImageRed {
+            get {
+                object obj = ResourceManager.GetObject("BulletImageRed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap CVLargeBlue {
             get {
                 object obj = ResourceManager.GetObject("CVLargeBlue", resourceCulture);
@@ -244,6 +254,16 @@ namespace Asteroids.Properties {
         internal static System.IO.UnmanagedMemoryStream Dying_Robot {
             get {
                 return ResourceManager.GetStream("Dying_Robot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap EnemyShip {
+            get {
+                object obj = ResourceManager.GetObject("EnemyShip", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -11,6 +11,8 @@ namespace Asteroids
         public int life = 80;  //100;   // How many iterations the bullet can last.
         public int Iterations { get; set; }
 
+        public bool Enemy = false;
+
         public Bullets(int StartPosX, int StartPosY, GameControl gameControl)
         : base(StartPosX, StartPosY, gameControl)
         { }
